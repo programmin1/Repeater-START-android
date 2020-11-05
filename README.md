@@ -8,7 +8,7 @@ What works:
 * Browse Mapbox map, online or offline.
 * Locate button
 * Search for peaks or areas
-* Add repeater button to contribute to Hearham.live/repeater listing.
+* Add repeater button to contribute to Hearham.live/repeaters listing.
 
 What doesn't work:
 * What3words API
