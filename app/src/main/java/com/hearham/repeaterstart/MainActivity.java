@@ -32,6 +32,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -214,27 +215,61 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 					@Override
 					public void processFinish(JSONArray output)
 					{
-						final SearchListAdapter searchAdapter = new SearchListAdapter(activity, output);
-						listview.setAdapter(searchAdapter);
-						listview.setOnItemClickListener(new AdapterView.OnItemClickListener()
-						{
-							@Override
-							public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+						if( output == null ) {
+							Toast.makeText(getApplicationContext(),R.string.SearchFailed,Toast.LENGTH_LONG).show();
+						} else {
+							final SearchListAdapter searchAdapter = new SearchListAdapter(activity, output);
+							listview.setAdapter(searchAdapter);
+							listview.setOnItemClickListener(new AdapterView.OnItemClickListener()
 							{
-								try {
-									mapboxMap.setCameraPosition(new CameraPosition.Builder()
-											.target( searchAdapter.position(i) )
-											.build()
-									);
+								@Override
+								public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+								{
+									try {
+										mapboxMap.setCameraPosition(new CameraPosition.Builder()
+												.target(searchAdapter.position(i))
+												.build()
+										);
 
-								} catch (JSONException e) {
-									e.printStackTrace();
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 				});
 				search.execute(searchstr);
+			}
+		});
+		View home_button = findViewById(R.id.home_button);
+		home_button.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Location position = mapboxMap.getLocationComponent().getLastKnownLocation();
+				LatLng LatLonPos = new LatLng();
+				LatLonPos.setLatitude( position.getLatitude() );
+				LatLonPos.setLongitude( position.getLongitude() );
+				mapboxMap.setCameraPosition(new CameraPosition.Builder()
+						.target( LatLonPos )
+						.build()
+				);
+				//Re center list
+				setRepeaterList();
+			}
+		});
+		View add_button = findViewById(R.id.add_button);
+		add_button.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				String url = "https://hearham.com/repeaters/add";
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
 			}
 		});
 	}

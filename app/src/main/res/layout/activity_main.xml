@@ -31,24 +31,35 @@
                     android:theme="?attr/actionBarTheme">
 
                         <ImageButton
-                            android:id="@+id/imageButton"
+                            android:id="@+id/home_button"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
+                            android:scaleType="fitCenter"
                             app:srcCompat="@drawable/ic_locateme" />
 
                         <EditText
                             android:id="@+id/search_text"
-                            android:layout_width="100dp"
+                            android:layout_width="200dp"
                             android:layout_height="match_parent"
-                            android:singleLine="true"
                             android:maxLines="1"
+                            android:singleLine="true"
                             android:text="" />
+
                         <ImageButton
                             android:id="@+id/search_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
+
+
+                        <ImageButton
+                            android:id="@+id/add_button"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:cropToPadding="false"
+                            app:srcCompat="@android:drawable/ic_input_add" />
                 </androidx.appcompat.widget.Toolbar>
+
 
 
                 <ListView
