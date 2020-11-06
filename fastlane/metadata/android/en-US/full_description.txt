@@ -1,0 +1,5 @@
+Repeater-START (Showing The Amateur Repeaters Tool) is the only open-source app utilizing the open-data repeater project at hearham.live.
+
+This is the Android port of the Linux app that lets you see the repeaters on a map and on a list, sorted nearest first.
+
+Once updated, the app works online or offline.
