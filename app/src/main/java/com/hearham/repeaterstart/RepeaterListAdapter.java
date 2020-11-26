@@ -16,6 +16,7 @@
 package com.hearham.repeaterstart;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +104,9 @@ public class RepeaterListAdapter extends BaseAdapter
 				label1.setText("Node " + iNode + ", " + obj.getString("callsign") + " at " + mhz);
 			} else {
 				label1.setText(obj.getString("callsign") + ", " + mhz);
+			}
+			if( obj.getInt("operational") < 1 ) {
+				label1.setPaintFlags(label1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 			}
 			label2.setText("PL " + obj.getString("encode") + ", Offset " + String.valueOf(obj.getInt("offset") / 1000000.0) + ",\n" +
 					data.get(position).getString("description"));

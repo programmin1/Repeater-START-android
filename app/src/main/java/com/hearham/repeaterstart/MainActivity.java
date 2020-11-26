@@ -73,7 +73,6 @@ import static com.hearham.repeaterstart.R.id.repeaterList;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
-import static java.lang.Math.sin;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -92,9 +91,13 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 {
 	private static MapboxMap mapboxMap;
 	private MapView mapView;
-	private static final String ICON_ID = "ICONREPEATER";
+	private static final String REPEATERICON_ID = "ICONREPEATER";
+	private static final String REPEATERDOWNICON_ID = "ICONREPEATERDOWN";
+
 	private static final String SOURCE_ID = "SOURCE_ID";
+	private static final String SOURCEDOWN_ID = "SOURCE_DOWN_ID";
 	private static final String LAYER_ID = "LAYER_ID";
+	private static final String LAYERDOWN_ID = "LAYERDOWN_ID";
 	private static final String TAG = "RepeaterSTART";
 	ListView listview;
 	private double currentLat =-1;
@@ -105,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 	private DownloadManager downloadManager;
 	private long downloadJSONReference;
 
-	private List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
+	private List<Feature> repeaterFeatureList = new ArrayList<>();
+	private List<Feature> repeaterDownFeatureList = new ArrayList<>();
 	private RepeaterListAdapter nearbyRepeaterAdapter;
 	private JSONArray repeaterlist;
 
@@ -156,20 +160,32 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 				setRepeaterList();
 				//https://docs.mapbox.com/help/tutorials/first-steps-android-sdk/#add-markers
 				mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/programmin/ckb5u3thq35l91iq9h1d5k172")
-						.withImage(ICON_ID,
+						.withImage(REPEATERICON_ID,
 								getBitmap(getApplicationContext(),
 										R.drawable.ic_signaltower))
+						.withImage(REPEATERDOWNICON_ID,
+								getBitmap(getApplicationContext(),
+										R.drawable.ic_signaltowerdown))
 
 						// Adding a GeoJson source for the SymbolLayer icons.
 						.withSource(new GeoJsonSource(SOURCE_ID,
-								FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
+								FeatureCollection.fromFeatures(repeaterFeatureList)))
+						.withSource(new GeoJsonSource(SOURCEDOWN_ID,
+								FeatureCollection.fromFeatures(repeaterDownFeatureList)))
 
 						// Adding the actual SymbolLayer to the map style. An offset is added that the bottom of the red
 						// marker icon gets fixed to the coordinate, rather than the middle of the icon being fixed to
 						// the coordinate point. This is offset is not always needed and is dependent on the image
 						// that you use for the SymbolLayer icon.
-						.withLayer(new SymbolLayer(LAYER_ID, SOURCE_ID)
-								.withProperties(PropertyFactory.iconImage(ICON_ID),
+						.withLayers( //Now two layers, red/inoperable and normal repeaters:
+								new SymbolLayer(LAYERDOWN_ID, SOURCEDOWN_ID)
+								.withProperties(PropertyFactory.iconImage(REPEATERDOWNICON_ID),
+										iconAllowOverlap(true),
+										iconOffset(new Float[] {0f, 0f}),
+										iconSize((float)0.333))
+								,
+								new SymbolLayer(LAYER_ID, SOURCE_ID)
+								.withProperties(PropertyFactory.iconImage(REPEATERICON_ID),
 										iconAllowOverlap(true),
 										iconOffset(new Float[] {0f, 0f}),
 										iconSize((float)0.333))
@@ -296,8 +312,13 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 					repeaterlist = new JSONArray(out.toString());
 					for (int i = 0; i < repeaterlist.length(); i++) {
 						JSONObject c = repeaterlist.getJSONObject(i);
-						symbolLayerIconFeatureList.add(Feature.fromGeometry(
-								Point.fromLngLat(c.getDouble("longitude"), c.getDouble("latitude"))));
+						if( c.getInt("operational") > 0 ) {
+							repeaterFeatureList.add(Feature.fromGeometry(
+									Point.fromLngLat(c.getDouble("longitude"), c.getDouble("latitude"))));
+						} else {
+							repeaterDownFeatureList.add(Feature.fromGeometry(
+									Point.fromLngLat(c.getDouble("longitude"), c.getDouble("latitude"))));
+						}
 					}
 				} catch (FileNotFoundException e) {
 					Log.w(TAG, "Repeaterlist not available yet");
