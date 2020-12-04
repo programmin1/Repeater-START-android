@@ -13,3 +13,7 @@ What works:
 What doesn't work:
 * What3words API
 * Marking the center of the map as the selected area and point that the repeater distance is calculated from.
+
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/com.hearham.repeaterstart/)
