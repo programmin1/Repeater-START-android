@@ -65,6 +65,8 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.pluginscalebar.ScaleBarOptions;
+import com.mapbox.pluginscalebar.ScaleBarPlugin;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -194,6 +196,12 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 							@Override
 							public void onStyleLoaded(@NonNull Style style) {
 								enableLocationComponent(style);
+
+								ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(mapView, mapboxMap);
+
+								// Create a ScaleBarOptions object to use the Plugin's default styling
+								scaleBarPlugin.create(new ScaleBarOptions(getApplicationContext())
+										/*.setTextSize(50f)*/);
 								//mapboxMap.setMinZoomPreference(10);
 							}
 						}
