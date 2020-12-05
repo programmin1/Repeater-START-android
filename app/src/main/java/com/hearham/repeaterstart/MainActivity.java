@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import io.sentry.Sentry;
 
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
