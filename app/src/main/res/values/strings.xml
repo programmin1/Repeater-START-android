@@ -4,4 +4,6 @@
     <string name="user_location_permission_explanation">Permission</string>
     <string name="user_location_permission_not_granted">Permission denied</string>
     <string name="SearchFailed">Sorry, search failed, please check network settings.</string>
+    <string name="user_navigated_centered_maidenhead">Map centered on entered maidenhead/gridsquare coordinate.</string>
+    <string name="user_navigated_centered_what_three_words">Map centered on entered WhatThreeWords coordinate.</string>
 </resources>

@@ -89,6 +89,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements PermissionsListener
 {
@@ -235,36 +236,72 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 			public void onClick(View view)
 			{
 				String searchstr = ((EditText)findViewById(R.id.search_text)).getText().toString();
-				SearchOSMTask search = new SearchOSMTask(new SearchOSMTask.SearchResponse()
-				{
-					@Override
-					public void processFinish(JSONArray output)
+				LatLng maidenhead = MaidenheadLocator.LocatorToLatLng(searchstr);
+				if( maidenhead != null ) {
+					mapboxMap.setCameraPosition(new CameraPosition.Builder()
+							.target(maidenhead)
+							.build()
+					);
+					setRepeaterList();
+					Toast.makeText(getApplicationContext(), R.string.user_navigated_centered_maidenhead, Toast.LENGTH_LONG).show();
+				} else if (Pattern.matches("^.*\\..*\\..*$", searchstr)) {
+					SearchWhatThreeWordsTask search = new SearchWhatThreeWordsTask(new SearchWhatThreeWordsTask.SearchResponse()
 					{
-						if( output == null ) {
-							Toast.makeText(getApplicationContext(),R.string.SearchFailed,Toast.LENGTH_LONG).show();
-						} else {
-							final SearchListAdapter searchAdapter = new SearchListAdapter(activity, output);
-							listview.setAdapter(searchAdapter);
-							listview.setOnItemClickListener(new AdapterView.OnItemClickListener()
-							{
-								@Override
-								public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-								{
-									try {
-										mapboxMap.setCameraPosition(new CameraPosition.Builder()
-												.target(searchAdapter.position(i))
-												.build()
-										);
-
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
+						@Override
+						public void processFinish(JSONObject output)
+						{
+							if (output == null) {
+								Toast.makeText(getApplicationContext(), R.string.SearchFailed, Toast.LENGTH_LONG).show();
+							} else {
+								LatLng position = new LatLng();
+								try {
+									position.setLatitude(output.getJSONObject("coordinates").getDouble("lat"));
+									position.setLongitude(output.getJSONObject("coordinates").getDouble("lng"));
+									mapboxMap.setCameraPosition(new CameraPosition.Builder()
+											.target(position)
+											.build()
+									);
+									setRepeaterList();
+								} catch (JSONException e) {
+									e.printStackTrace();
 								}
-							});
+							}
 						}
-					}
-				});
-				search.execute(searchstr);
+					});
+					search.execute(searchstr);
+					Toast.makeText(getApplicationContext(), R.string.user_navigated_centered_what_three_words, Toast.LENGTH_LONG).show();
+				} else {
+					SearchOSMTask search = new SearchOSMTask(new SearchOSMTask.SearchResponse()
+					{
+						@Override
+						public void processFinish(JSONArray output)
+						{
+							if (output == null) {
+								Toast.makeText(getApplicationContext(), R.string.SearchFailed, Toast.LENGTH_LONG).show();
+							} else {
+								final SearchListAdapter searchAdapter = new SearchListAdapter(activity, output);
+								listview.setAdapter(searchAdapter);
+								listview.setOnItemClickListener(new AdapterView.OnItemClickListener()
+								{
+									@Override
+									public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+									{
+										try {
+											mapboxMap.setCameraPosition(new CameraPosition.Builder()
+													.target(searchAdapter.position(i))
+													.build()
+											);
+
+										} catch (JSONException e) {
+											e.printStackTrace();
+										}
+									}
+								});
+							}
+						}
+					});
+					search.execute(searchstr);
+				}
 			}
 		});
 		View home_button = findViewById(R.id.home_button);
