@@ -22,11 +22,14 @@ import androidx.core.content.ContextCompat;
 import io.sentry.Sentry;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -39,6 +42,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -151,10 +155,30 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 		if( centering ) {
 			Pattern p = Pattern.compile("-{0,1}\\d*\\.{0,1}\\d+");
 			Matcher m = p.matcher(intent.getDataString());
-			 m.find();
-			 chosen.setLatitude(Double.valueOf(m.group()));
-			 m.find();
-			 chosen.setLongitude(Double.valueOf(m.group()));
+			m.find();
+			chosen.setLatitude(Double.valueOf(m.group()));
+			m.find();
+			chosen.setLongitude(Double.valueOf(m.group()));
+		} else {
+			//Normal load?
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			boolean show = sharedPreferences.getBoolean("SHOWWELCOME", true);
+
+			if(show) {
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+				alertDialogBuilder.setTitle(R.string.welcome);
+				alertDialogBuilder.setMessage(R.string.welcomemsg);
+				alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						editor.putBoolean("SHOWWELCOME", false);
+						editor.commit();
+					}
+				});
+				alertDialogBuilder.create();
+				alertDialogBuilder.show();
+			}
 		}
 
 		listview = (ListView) findViewById(repeaterList);

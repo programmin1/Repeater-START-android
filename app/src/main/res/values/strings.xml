@@ -6,4 +6,18 @@
     <string name="SearchFailed">Sorry, search failed, please check network settings.</string>
     <string name="user_navigated_centered_maidenhead">Map centered on entered maidenhead/gridsquare coordinate.</string>
     <string name="user_navigated_centered_what_three_words">Map centered on entered WhatThreeWords coordinate.</string>
+
+    <string name="welcome">Welcome</string>
+    <string name="welcomemsg">Repeater-START is an app for amateur radio.
+
+    When started, this app will try to update the latest repeaters from the hearham.com listing.
+    If offline, the list will be loaded from storage.
+    All repeaters in the lower half of the screen are listed by distance from the center of the map.
+\n\n
+    Tap a repeater to center its position on the topo map.
+\n\n
+    Tracking:
+    Mapbox tracks number of active users and telemetry settings may be set through the (i) button
+    at the bottom of the topo map.
+    In the event of a crash some diagnostic data may be sent for debugging purposes through sentry.io.</string>
 </resources>
