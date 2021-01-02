@@ -16,6 +16,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="geo" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <meta-data android:name="io.sentry.dsn" android:value="https://de3f38aa90eb4cf480699bc31a0be9d6@o92400.ingest.sentry.io/5545998" />

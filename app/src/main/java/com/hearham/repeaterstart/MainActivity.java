@@ -89,6 +89,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements PermissionsListener
@@ -144,6 +145,18 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		Intent intent = this.getIntent();
+		boolean centering = intent.getScheme() != null && intent.getScheme().equals("geo");
+		final LatLng chosen =  new LatLng();
+		if( centering ) {
+			Pattern p = Pattern.compile("-{0,1}\\d*\\.{0,1}\\d+");
+			Matcher m = p.matcher(intent.getDataString());
+			 m.find();
+			 chosen.setLatitude(Double.valueOf(m.group()));
+			 m.find();
+			 chosen.setLongitude(Double.valueOf(m.group()));
+		}
+
 		listview = (ListView) findViewById(repeaterList);
 		System.setProperty("http.agent","Repeater-Start");
 		super.onCreate(savedInstanceState);
@@ -204,6 +217,12 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 								scaleBarPlugin.create(new ScaleBarOptions(getApplicationContext())
 										/*.setTextSize(50f)*/);
 								//mapboxMap.setMinZoomPreference(10);
+								if( centering ) {
+									mapboxMap.setCameraPosition(new CameraPosition.Builder()
+											.target(chosen)
+											.build()
+									);
+								}
 							}
 						}
 				);
@@ -340,6 +359,10 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 	{
 		if( mapboxMap == null || null == mapboxMap.getCameraPosition() ) return;
 		LatLng center = mapboxMap.getCameraPosition().target;
+		if( center == null ) {
+			Log.e("Center","Center is null");
+			return;
+		}
 		double lat = center.getLatitude();
 		double lon = center.getLongitude();
 		if( lat != this.currentLat || lon != this.currentLon ) {
