@@ -20,4 +20,12 @@
     Mapbox tracks number of active users and telemetry settings may be set through the (i) button
     at the bottom of the topo map.
     In the event of a crash some diagnostic data may be sent for debugging purposes through sentry.io.</string>
+    <string name="title_activity_settings">RepeaterSTART Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="display_header">Display</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Display Units</string>
+
 </resources>

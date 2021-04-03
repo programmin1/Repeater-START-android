@@ -44,6 +44,9 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -144,6 +147,27 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 		} else {
 			throw new IllegalArgumentException("unsupported drawable type");
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.main_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// Handle item selection
+		switch (item.getItemId()) {
+			case R.id.menu_settings:
+
+				Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+				startActivity(intent);
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -475,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 			locationComponent.activateLocationComponent(
 					LocationComponentActivationOptions.builder(this, loadedMapStyle).build());
 
-		// Enable to make component visibl
+		// Enable to make component visible
 		try {
 			locationComponent.setLocationComponentEnabled(true);
 		} catch (Exception e) {

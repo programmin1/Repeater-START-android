@@ -16,7 +16,9 @@
 package com.hearham.repeaterstart;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,7 @@ public class RepeaterListAdapter extends BaseAdapter
 	private ArrayList<JSONObject> data;
 	private static LayoutInflater inflater = null;
 	private LatLng center;
+	private SharedPreferences sharedPrefs;
 
 	public RepeaterListAdapter(Context context, ArrayList<JSONObject> data, final LatLng center)
 	{
@@ -49,6 +52,7 @@ public class RepeaterListAdapter extends BaseAdapter
 		this.center = center;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		Collections.sort(this.data, new Comparator<JSONObject>()
 		{
 			@Override
@@ -112,9 +116,12 @@ public class RepeaterListAdapter extends BaseAdapter
 					data.get(position).getString("description"));
 
 			double dist = Utils.distance(obj, center.getLatitude(), center.getLongitude());
-			//To Miles TODO option for this
-			dist = .62137119*dist;
-			distlbl.setText(String.format("%.2g",dist)+"mi");
+
+			String units = sharedPrefs.getString("display_units", "mi");
+			if( units.equals("mi")) {
+				dist = .62137119 * dist;
+			}
+			distlbl.setText(String.format("%.2g",dist)+units);
 
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -1,0 +1,11 @@
+<resources>
+    <string-array name="display_units">
+        <item>km</item>
+        <item>mi</item>
+    </string-array>
+    <string-array name="display_units_ui">
+        <item>Kilometers</item>
+        <item>Miles</item>
+    </string-array>
+
+</resources>
