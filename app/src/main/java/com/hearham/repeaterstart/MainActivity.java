@@ -166,6 +166,18 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 				Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
 				startActivity(intent);
 				return true;
+			case R.id.menu_info:
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+				alertDialogBuilder.setTitle("About");
+				alertDialogBuilder.setMessage(R.string.welcomemsg);
+				alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				});
+				alertDialogBuilder.create();
+				alertDialogBuilder.show();
+				return true;
 		}
 		return false;
 	}
