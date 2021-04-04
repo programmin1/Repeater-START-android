@@ -118,6 +118,9 @@ public class RepeaterListAdapter extends BaseAdapter
 			}
 			if( obj.getInt("operational") < 1 ) {
 				label1.setPaintFlags(label1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+			} else {
+				//Un strikethrough if necessary?
+				label1.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
 			}
 			label2.setText("PL " + obj.getString("encode") + ", Offset " + String.valueOf(obj.getInt("offset") / 1000000.0) + ",\n" +
 					data.get(position).getString("description"));
@@ -160,7 +163,7 @@ public class RepeaterListAdapter extends BaseAdapter
 	{
 		final JSONObject selection = data.get(i);
 		final String url = "https://hearham.com/repeaters/"+String.valueOf(data.get(i).getInt("id") +"?src=Android");
-		final String commentUrl = url + "/comment?src=Android";
+		final String commentUrl = "https://hearham.com/repeaters/"+String.valueOf(data.get(i).getInt("id") +"/comment?src=Android");
 		final ArrayList<String> links = getAllLinksFromTheText(data.get(i).getString("description"));
 		PopupMenu popup = new PopupMenu(this.context,view);
 
@@ -185,11 +188,13 @@ public class RepeaterListAdapter extends BaseAdapter
 						return true;
 				}
 				//Other links in description
-				CharSequence descURL = menuItem.getTitle();
-				Intent special = new Intent( Intent.ACTION_VIEW , Uri.parse((String) descURL) );
+				String descURL = (String) menuItem.getTitle();
+				if( descURL.indexOf("http") != 0 ) {
+					descURL = "http://"+descURL;
+				}
+				Intent special = new Intent( Intent.ACTION_VIEW , Uri.parse(descURL) );
 				context.startActivity(special);
-
-				return false;
+				return true;
 			}
 		});
 		return popup;
