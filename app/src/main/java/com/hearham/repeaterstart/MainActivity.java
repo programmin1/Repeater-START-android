@@ -489,6 +489,19 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 						}
 					}
 				});
+				listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+				{
+					@Override
+					public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+					{
+						try {
+							nearbyRepeaterAdapter.menuForPos(i, view).show();
+						} catch (JSONException e) {
+							Sentry.captureException(e);
+						}
+						return false;
+					}
+				});
 			}
 		}
 	}

@@ -16,13 +16,18 @@
 package com.hearham.repeaterstart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -33,6 +38,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Main repeater listing with sortability.
@@ -135,5 +142,56 @@ public class RepeaterListAdapter extends BaseAdapter
 		position.setLatitude(data.get(i).getDouble("latitude"));
 		position.setLongitude(data.get(i).getDouble("longitude"));
 		return position;
+	}
+
+	private ArrayList<String> getAllLinksFromTheText(String text) {
+		//https://stackoverflow.com/questions/5713558
+		String LINK_REGEX = "((http:\\/\\/|https:\\/\\/)?(www.)?(([a-zA-Z0-9-]){2,2083}\\.){1,4}([a-zA-Z]){2,6}(\\/(([a-zA-Z-_\\/\\.0-9#:?=&;,]){0,2083})?){0,2083}?[^ \\n]*)";
+		ArrayList<String> links = new ArrayList<>();
+		Pattern p = Pattern.compile(LINK_REGEX, Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(text);
+		while (m.find()) {
+			links.add(m.group());
+		}
+		return links;
+	}
+
+	public PopupMenu menuForPos(int i, View view) throws JSONException
+	{
+		final JSONObject selection = data.get(i);
+		final String url = "https://hearham.com/repeaters/"+String.valueOf(data.get(i).getInt("id") +"?src=Android");
+		final String commentUrl = url + "/comment?src=Android";
+		final ArrayList<String> links = getAllLinksFromTheText(data.get(i).getString("description"));
+		PopupMenu popup = new PopupMenu(this.context,view);
+
+		MenuInflater inflater = popup.getMenuInflater();
+		inflater.inflate(R.menu.menu_repeater, popup.getMenu());
+		for( int l = 0; l<links.size(); l++ ) {
+			popup.getMenu().add(1, 1, 0, links.get(l));
+		}
+		popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+		{
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem)
+			{
+				switch( menuItem.getItemId() ) {
+					case R.id.Go:
+						Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( url ) );
+						context.startActivity(browse);
+						return true;
+					case R.id.GoComment:
+						Intent comment = new Intent( Intent.ACTION_VIEW , Uri.parse( commentUrl ) );
+						context.startActivity(comment);
+						return true;
+				}
+				//Other links in description
+				CharSequence descURL = menuItem.getTitle();
+				Intent special = new Intent( Intent.ACTION_VIEW , Uri.parse((String) descURL) );
+				context.startActivity(special);
+
+				return false;
+			}
+		});
+		return popup;
 	}
 }
