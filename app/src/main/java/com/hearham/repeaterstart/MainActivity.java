@@ -94,6 +94,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -323,6 +324,43 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 					);
 					setRepeaterList();
 					Toast.makeText(getApplicationContext(), R.string.user_navigated_centered_maidenhead, Toast.LENGTH_LONG).show();
+				} else if (Pattern.matches("(\\d)*\\.?(\\d)*$", searchstr)) {
+					//Search for frequency
+					//ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+					JSONArray list = new JSONArray();
+					long freq = (long) (Double.valueOf(searchstr)*1000000);
+
+					try {
+						for (int i = 0; i < repeaterlist.length(); i++) {
+							if (repeaterlist.getJSONObject(i).getInt("frequency") == freq ||
+									repeaterlist.getJSONObject(i).getInt("frequency") + repeaterlist.getJSONObject(i).getInt("offset") == freq) {
+								list.put(repeaterlist.getJSONObject(i));
+							}
+						}
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					final SearchFreqListAdapter searchAdapter = new SearchFreqListAdapter(activity, list, mapboxMap.getCameraPosition().target);
+					listview.setAdapter(searchAdapter);
+					listview.setOnItemClickListener(new AdapterView.OnItemClickListener()
+					{
+						@Override
+						public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+						{
+							try {
+								mapboxMap.setCameraPosition(new CameraPosition.Builder()
+										.target(searchAdapter.position(i))
+										.build()
+								);
+
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					listview.setLongClickable(false);
+
 				} else if (Pattern.matches("^.*\\..*\\..*$", searchstr)) {
 					SearchWhatThreeWordsTask search = new SearchWhatThreeWordsTask(new SearchWhatThreeWordsTask.SearchResponse()
 					{
@@ -342,6 +380,7 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 									);
 									setRepeaterList();
 								} catch (JSONException e) {
+									Sentry.captureException(e);
 									e.printStackTrace();
 								}
 							}
@@ -376,6 +415,7 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 										}
 									}
 								});
+								listview.setLongClickable(false);
 							}
 						}
 					});
@@ -489,6 +529,7 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 						}
 					}
 				});
+				listview.setLongClickable(true);
 				listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
 				{
 					@Override

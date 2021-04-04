@@ -30,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import io.sentry.Sentry;
+
 public class SearchOSMTask extends AsyncTask<String,Void,String>
 {
 	private final SearchResponse delegate;
@@ -66,12 +68,16 @@ public class SearchOSMTask extends AsyncTask<String,Void,String>
 			}
 
 		} catch (UnsupportedEncodingException e) {
+			Sentry.captureException(e);
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
+			Sentry.captureException(e);
 			e.printStackTrace();
 		} catch (IOException e) {
+			Sentry.captureException(e);
 			e.printStackTrace();
 		} catch (JSONException e) {
+			Sentry.captureException(e);
 			e.printStackTrace();
 		}
 		return null;

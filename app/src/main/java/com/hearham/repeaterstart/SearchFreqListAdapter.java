@@ -32,17 +32,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import io.sentry.Sentry;
+
 /**
- * Search OSM
+ * Search for frequency.
  */
-public class SearchListAdapter extends BaseAdapter
+public class SearchFreqListAdapter extends BaseAdapter
 {
 	private Context context;
 	private JSONArray data;
 	private static LayoutInflater inflater = null;
 	private LatLng center;
 
-	public SearchListAdapter(Context context, JSONArray data)
+	public SearchFreqListAdapter(Context context, JSONArray data, LatLng center)
 	{
 		this.context = context;
 		this.data = data;
@@ -81,21 +83,27 @@ public class SearchListAdapter extends BaseAdapter
 		if (vi == null)
 			vi = inflater.inflate(R.layout.searchrow, null);
 		TextView label = (TextView) vi.findViewById(R.id.label);
+		String lbltext = "";
 		try {
 			JSONObject obj = (JSONObject) data.get(position);
-			label.setText(obj.getString("display_name"));
-		} catch (JSONException e) {
-			e.printStackTrace();
+			double dist = Utils.distance(obj, center.getLatitude(), center.getLongitude());
+			lbltext = String.format("%s (%.2f/%.2f) distance %.2f",obj.getString("callsign"),
+					obj.getDouble("frequency")/1000000, (obj.getDouble("frequency")+obj.getDouble("offset"))/1000000, dist);
+		} catch (JSONException ex) {
+			Sentry.captureException(ex);
+			ex.printStackTrace();
 		}
+		label.setText(lbltext);
 		return vi;
 	}
 
 	public LatLng position(int i) throws JSONException
 	{
 		LatLng position = new LatLng();
-		JSONObject OSMResponse = (JSONObject)data.get(i);
-		position.setLatitude(OSMResponse.getDouble("lat"));
-		position.setLongitude(OSMResponse.getDouble("lon"));
+		JSONObject repeater = (JSONObject)data.get(i);
+		position.setLatitude(repeater.getDouble("latitude"));
+		position.setLongitude(repeater.getDouble("longitude"));
+
 		return position;
 	}
 }
