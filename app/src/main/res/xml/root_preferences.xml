@@ -1,7 +1,6 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/display_header">
-
         <ListPreference
             app:key="display_units"
             app:title="@string/signature_title"
@@ -9,7 +8,18 @@
             app:entryValues="@array/display_units"
             app:useSimpleSummaryProvider="true"
             app:defaultValue="mi"/>
-
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="Network">
+        <ListPreference
+            app:key="update_freq"
+            app:title="@string/update_freq"
+            app:entries="@array/update_frequencies_ui"
+            app:entryValues="@array/update_frequencies"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="86400"
+            />
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

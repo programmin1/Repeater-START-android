@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 	private RepeaterListAdapter nearbyRepeaterAdapter;
 	private JSONArray repeaterlist;
 
+	private SharedPreferences sharedPrefs;
+
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
 		Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
@@ -607,14 +609,20 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 	protected void  onResume() {
 		super.onResume();
 		mapView.onResume();
-
-		downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
-		//Do not start multiple downloads:
-		if( downloadJSONReference == 0 ) {
-			//Start download
-			DownloadManager.Request request = new DownloadManager.Request(Uri.parse("https://hearham.com/api/repeaters/v1"));
-			request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "repeaters.json");
-			downloadJSONReference = downloadManager.enqueue(request);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		long now = System.currentTimeMillis() / 1000L;
+		String updateFreq = sharedPrefs.getString("update_freq", "60");
+		long lastDl = sharedPrefs.getLong("last_update", 0);
+		if( lastDl + Long.valueOf(updateFreq) < now ) {
+			downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+			//Do not start multiple downloads:
+			if( downloadJSONReference == 0 ) {
+				//Start download
+				DownloadManager.Request request = new DownloadManager.Request(Uri.parse("https://hearham.com/api/repeaters/v1"));
+				request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "repeaters.json");
+				downloadJSONReference = downloadManager.enqueue(request);
+			}
+			sharedPrefs.edit().putLong("last_update",now).apply();
 		}
 	}
 

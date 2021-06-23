@@ -7,5 +7,19 @@
         <item>Kilometers</item>
         <item>Miles</item>
     </string-array>
+    <string-array name="update_frequencies_ui">
+        <item>Minute</item>
+        <item>Hour</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+    <string-array name="update_frequencies">
+        <item>60</item>
+        <item>3600</item>
+        <item>86400</item>
+        <item>604800</item>
+        <item>1814400</item>
+    </string-array>
 
 </resources>

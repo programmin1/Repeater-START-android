@@ -27,5 +27,6 @@
 
     <!-- Messages Preferences -->
     <string name="signature_title">Display Units</string>
+    <string name="update_freq">Max Update Frequency</string>
 
 </resources>
