@@ -27,37 +27,64 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorPrimary"
-                    android:minHeight="?attr/actionBarSize"
-                    android:theme="?attr/actionBarTheme">
+                    android:theme="?attr/actionBarTheme"
+                    app:contentInsetStart="0dp"
+                    app:contentInsetEnd="0dp">
 
-                        <ImageButton
-                            android:id="@+id/home_button"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:scaleType="fitCenter"
-                            app:srcCompat="@drawable/ic_locateme" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/ConstraintButtons"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center">
 
-                        <EditText
-                            android:id="@+id/search_text"
-                            android:layout_width="200dp"
-                            android:layout_height="match_parent"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:text="" />
+                                <ImageButton
+                                    android:id="@+id/home_button"
+                                    android:layout_width="45dp"
+                                    android:layout_height="45dp"
+                                    android:scaleType="fitCenter"
+                                    app:layout_constraintBottom_toBottomOf="@+id/ConstraintButtons"
+                                    app:layout_constraintEnd_toStartOf="@+id/search_text"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/ConstraintButtons"
+                                    app:srcCompat="@drawable/ic_locateme" />
 
-                        <ImageButton
-                            android:id="@+id/search_btn"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
+                                <EditText
+                                    android:id="@+id/search_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    app:layout_constraintBottom_toBottomOf="@+id/ConstraintButtons"
+                                    app:layout_constraintEnd_toStartOf="@+id/search_btn"
+                                    app:layout_constraintStart_toEndOf="@+id/home_button"
+                                    app:layout_constraintTop_toTopOf="@+id/ConstraintButtons" />
+
+                                <ImageButton
+                                    android:id="@+id/search_btn"
+                                    android:layout_width="45dp"
+                                    android:layout_height="45dp"
+                                    android:scaleType="fitCenter"
+                                    app:layout_constraintBottom_toBottomOf="@+id/ConstraintButtons"
+                                    app:layout_constraintEnd_toStartOf="@+id/add_button"
+                                    app:layout_constraintStart_toEndOf="@+id/search_text"
+                                    app:layout_constraintTop_toTopOf="@+id/ConstraintButtons"
+                                    app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
 
 
-                        <ImageButton
-                            android:id="@+id/add_button"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:cropToPadding="false"
-                            app:srcCompat="@android:drawable/ic_input_add" />
+                                <ImageButton
+                                    android:id="@+id/add_button"
+                                    android:layout_width="45dp"
+                                    android:layout_height="45dp"
+                                    android:cropToPadding="false"
+                                    android:scaleType="fitCenter"
+                                    app:layout_constraintBottom_toBottomOf="@+id/ConstraintButtons"
+                                    app:layout_constraintEnd_toEndOf="@+id/ConstraintButtons"
+                                    app:layout_constraintStart_toEndOf="@+id/search_btn"
+                                    app:layout_constraintTop_toTopOf="@+id/ConstraintButtons"
+                                    app:srcCompat="@android:drawable/ic_input_add" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.appcompat.widget.Toolbar>
 
 
