@@ -131,6 +131,9 @@ public class RepeaterListAdapter extends BaseAdapter
 			if( units.equals("mi")) {
 				dist = .62137119 * dist;
 			}
+			//Round, not 1.xE-12 etc.
+			dist = ((double)Math.round(dist*100))/100;
+
 			distlbl.setText(String.format("%.2g",dist)+units);
 
 		} catch (JSONException e) {
