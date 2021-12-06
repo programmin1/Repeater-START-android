@@ -318,6 +318,8 @@ public class MainActivity extends AppCompatActivity implements PermissionsListen
 			public void onClick(View view)
 			{
 				String searchstr = ((EditText)findViewById(R.id.search_text)).getText().toString();
+				if( searchstr.equals("")) return; //No odd number exception.
+
 				LatLng maidenhead = MaidenheadLocator.LocatorToLatLng(searchstr);
 				if( maidenhead != null ) {
 					mapboxMap.setCameraPosition(new CameraPosition.Builder()
