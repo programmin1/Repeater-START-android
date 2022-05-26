@@ -14,7 +14,9 @@
  along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 package com.hearham.repeaterstart;
-
+import io.sentry.Breadcrumb;
+import io.sentry.Sentry;
+import io.sentry.SentryLevel;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -50,6 +52,12 @@ public class SearchOSMTask extends AsyncTask<String,Void,String>
 		String inputLine;
 		StringBuilder json = new StringBuilder();
 		Log.w("Search",strings[0]);
+
+		Breadcrumb breadcrumb = new Breadcrumb();
+		breadcrumb.setCategory("search");
+		breadcrumb.setMessage("SearchOSM for: " + strings[0]);
+		breadcrumb.setLevel(SentryLevel.INFO);
+		Sentry.addBreadcrumb(breadcrumb);
 		try {
 			//URL search = new URL("https://nominatim.openstreetmap.org/search/"+ URLEncoder.encode(strings[0], "UTF-8") +"?format=json&limit=50");
 			URL search = new URL("https://nominatim.openstreetmap.org/search/"+ strings[0] +"?format=json&limit=50");
