@@ -37,12 +37,15 @@ dependencies {
 
 
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.1'){
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         exclude group: 'com.google.android.gms'
     }
     implementation ('com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v9:0.5.0'){
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         exclude group: 'com.google.android.gms'
     }
     implementation ('com.mapbox.mapboxsdk:mapbox-android-telemetry:6.2.2'){
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         exclude group: 'com.google.android.gms'
     }
 
