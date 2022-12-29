@@ -35,18 +35,29 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.1'){
         exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         exclude group: 'com.google.android.gms'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-telemetry'
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-core'
     }
     implementation ('com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v9:0.5.0'){
         exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         exclude group: 'com.google.android.gms'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-telemetry'
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-core'
     }
     implementation ('com.mapbox.mapboxsdk:mapbox-android-telemetry:6.2.2'){
         exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
         exclude group: 'com.google.android.gms'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-accounts'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-telemetry'
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+        exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-core'
     }
 
 }
